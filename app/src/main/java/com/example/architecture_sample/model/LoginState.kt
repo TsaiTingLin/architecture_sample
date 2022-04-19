@@ -1,6 +1,6 @@
 package com.example.architecture_sample.model
 
 sealed class LoginState {
-    class Login(val loginEmail:String): LoginState()
-    object Logout: LoginState()
+    class Success(val loginEmail:String): LoginState()
+    object Fail: LoginState()
 }
