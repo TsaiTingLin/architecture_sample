@@ -1,2 +1,2 @@
 # architecture_sample
-MVVM架構範例
+MVVM + MVP架構範例
