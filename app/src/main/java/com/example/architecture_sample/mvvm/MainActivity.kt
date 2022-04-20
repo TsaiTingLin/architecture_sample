@@ -3,8 +3,8 @@ package com.example.architecture_sample.mvvm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 預設顯示鍵盤
+        showKeyboard(binding.inputEditText)
+
         // 點擊登入鍵
         binding.loginButton.setOnClickListener {
             // 取得輸入值
@@ -33,11 +36,10 @@ class MainActivity : AppCompatActivity() {
 
             // 清空輸入
             binding.inputEditText.text.clear()
-            Log.d("Test_login", "$inputText")
+            binding.loginAccountTextView.text = ""
 
             // 處理登入
             loginViewModel.login(inputText)
-
         }
 
         // 監聽登入狀態
@@ -71,7 +73,21 @@ class MainActivity : AppCompatActivity() {
         val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         manager.hideSoftInputFromWindow(
             binding.inputEditText.windowToken,
-            InputMethodManager.RESULT_UNCHANGED_SHOWN
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+
+    // 顯示鍵盤
+    private fun showKeyboard(editText: EditText) {
+        editText.postDelayed(
+            {
+                editText.requestFocus()
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.showSoftInput(
+                    binding.inputEditText,
+                    InputMethodManager.SHOW_IMPLICIT
+                )
+            }, 500
         )
     }
 
