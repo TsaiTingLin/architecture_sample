@@ -14,7 +14,7 @@ import com.example.architecture_sample.R
 import com.example.architecture_sample.model.LoginState
 import com.example.architecture_sample.mvp.MvpActivity
 
-class NoViewBindingActivity : AppCompatActivity() {
+class FindViewByIdActivity : AppCompatActivity() {
 
     private lateinit var inputEditText: EditText
     private lateinit var loginAccountTextView: TextView

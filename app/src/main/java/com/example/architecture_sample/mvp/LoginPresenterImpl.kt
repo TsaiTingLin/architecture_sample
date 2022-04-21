@@ -5,7 +5,9 @@ import com.example.architecture_sample.model.LoginRepository
 
 class LoginPresenterImpl(private var view: LoginContract.LoginView?) :
     LoginContract.LoginPresenter {
-    private val loginRepository = LoginRepository()
+    private val loginRepository by lazy {
+        LoginRepository()
+    }
 
     override fun viewDestroyed() {
         view = null
