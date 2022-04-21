@@ -4,57 +4,68 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.architecture_sample.databinding.ActivityMainBinding
+import com.example.architecture_sample.R
 import com.example.architecture_sample.model.LoginState
 import com.example.architecture_sample.mvp.MvpActivity
 
-// View
-class MainActivity : AppCompatActivity() {
+class NoViewBindingActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var inputEditText: EditText
+    private lateinit var loginAccountTextView: TextView
+    private lateinit var loginButton: Button
+    private lateinit var changeButton:Button
+
     private val loginViewModel by viewModels<LoginViewModel>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
         initView()
         initObserver()
 
         // 預設顯示鍵盤
-        showKeyboard(binding.inputEditText)
+        showKeyboard(inputEditText)
     }
 
     override fun onPause() {
         super.onPause()
         // 清空帳號顯示
-        binding.loginAccountTextView.text = ""
+        loginAccountTextView.text = ""
     }
 
     private fun initView() {
+        // findViewById
+        inputEditText = findViewById(R.id.input_editText)
+        loginAccountTextView = findViewById(R.id.login_account_textView)
+        loginButton = findViewById(R.id.login_button)
+        changeButton = findViewById(R.id.change_button)
+
         // 點擊登入鍵
-        binding.loginButton.setOnClickListener {
+        loginButton.setOnClickListener {
             // 取得輸入值
-            val inputText = binding.inputEditText.text.toString()
+            val inputText = inputEditText.text.toString()
 
             // 收鍵盤
             hideKeyboard()
 
             // 清空輸入
-            binding.inputEditText.text.clear()
-            binding.loginAccountTextView.text = ""
+            inputEditText.text.clear()
+            loginAccountTextView.text = ""
 
             // 處理登入
             loginViewModel.login(inputText)
         }
 
         // 前往MVP方式登入頁面
-        binding.changeButton.setOnClickListener {
+        changeButton.setOnClickListener {
             goToMVPPage()
         }
     }
@@ -65,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             when (loginState) {
                 is LoginState.Success -> {
                     // 顯示登入帳號
-                    binding.loginAccountTextView.text = "歡迎 ${loginState.loginEmail} 回來"
+                    loginAccountTextView.text = "歡迎 ${loginState.loginEmail} 回來"
                     Toast.makeText(this, "登入成功", Toast.LENGTH_SHORT).show()
                 }
                 is LoginState.Fail -> {
@@ -79,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         manager.hideSoftInputFromWindow(
-            binding.inputEditText.windowToken,
+            inputEditText.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
     }
@@ -91,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 editText.requestFocus()
                 val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 manager.showSoftInput(
-                    binding.inputEditText,
+                    inputEditText,
                     InputMethodManager.SHOW_IMPLICIT
                 )
             }, 500
